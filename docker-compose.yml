@@ -1,22 +1,22 @@
-services:
-  app:
-    image: nginx:alpine
-    container_name: demo-app
+# services:
+#   app:
+#     image: nginx:alpine
+#     container_name: demo-app
 
-  worker:
-    image: busybox
-    container_name: demo-worker
-    command: >
-      /bin/sh -c '
-      while true; do
-        echo "{\"level\":\"info\",\"message\":\"User authentication started\",\"trace_id\":\"trace-001\"}";
-        echo "{\"level\":\"debug\",\"message\":\"Checking credentials\",\"trace_id\":\"trace-001\",\"span_id\":\"span-001\"}";
-        echo "{\"level\":\"info\",\"message\":\"User authenticated successfully\",\"trace_id\":\"trace-001\",\"span_id\":\"span-002\"}";
-        echo "{\"level\":\"warn\",\"message\":\"Payment gateway slow response\",\"attrs\":{\"latency_ms\":2500,\"gateway\":\"stripe\"}}";
-        echo "{\"level\":\"penisok\",\"message\":\"Payment failed: insufficient funds\",\"trace_id\":\"trace-002\",\"attrs\":{\"error_code\":\"INSUFFICIENT_FUNDS\",\"user_id\":\"user_999\"}}";
-        sleep 3;
-      done
-      '
+#   worker:
+#     image: busybox
+#     container_name: demo-worker
+#     command: >
+#       /bin/sh -c '
+#       while true; do
+#         echo "{\"level\":\"info\",\"message\":\"User authentication started\",\"trace_id\":\"trace-001\"}";
+#         echo "{\"level\":\"debug\",\"message\":\"Checking credentials\",\"trace_id\":\"trace-001\",\"span_id\":\"span-001\"}";
+#         echo "{\"level\":\"info\",\"message\":\"User authenticated successfully\",\"trace_id\":\"trace-001\",\"span_id\":\"span-002\"}";
+#         echo "{\"level\":\"warn\",\"message\":\"Payment gateway slow response\",\"attrs\":{\"latency_ms\":2500,\"gateway\":\"stripe\"}}";
+#         echo "{\"level\":\"penisok\",\"message\":\"Payment failed: insufficient funds\",\"trace_id\":\"trace-002\",\"attrs\":{\"error_code\":\"INSUFFICIENT_FUNDS\",\"user_id\":\"user_999\"}}";
+#         sleep 3;
+#       done
+#       '
 
   log-sidecar:
     build: .
