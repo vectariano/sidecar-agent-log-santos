@@ -1,16 +1,3 @@
-# log-generator.py
-# UPDATED for the exact LogEvent format your sidecar-agent-log-santos expects
-# The generator ONLY outputs the RAW inner JSON that the agent parses.
-# The agent then adds:
-#   • service_id
-#   • @timestamp (or overrides if you include "@timestamp")
-#   • Docker metadata inside "attrs" (container_id, container_name, image, compose_project, stream)
-#
-# This produces logs that after processing look EXACTLY like the example you pasted:
-#   - Some logs with NO "attrs" key
-#   - Some logs with rich custom "attrs" + Docker metadata injected by the agent
-#   - Flexible timestamps, trace/span, levels (DEBUG/INFO/WARN/ERROR)
-
 import json
 import os
 import random
@@ -25,7 +12,6 @@ def generate_log_event() -> dict:
         k=1
     )[0]
 
-    # Messages similar to your example
     messages = {
         "DEBUG": [
             "Checking credentials",
@@ -52,13 +38,13 @@ def generate_log_event() -> dict:
 
     message = random.choice(messages.get(level, messages["INFO"]))
 
-    # Optional trace/span (80% of logs)
+
     trace_id = str(uuid.uuid4())[:12] if random.random() < 0.8 else None
     span_id = str(uuid.uuid4())[:8] if random.random() < 0.75 and trace_id else None
 
-    # Optional custom attrs (sometimes omitted to match your example)
+
     attrs = None
-    if random.random() < 0.65:  # 65% of logs have custom attrs
+    if random.random() < 0.65:  
         attrs = {}
         if level == "WARN" and "Payment gateway" in message:
             attrs["gateway"] = random.choice(["stripe", "paypal", "adyen"])
@@ -80,8 +66,6 @@ def generate_log_event() -> dict:
     if span_id:
         event["span_id"] = span_id
 
-    # You can include "@timestamp" if you want to control the exact time
-    # (agent will use it instead of Docker timestamp)
     if random.random() < 0.3:
         event["@timestamp"] = datetime.now(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
 
@@ -92,8 +76,8 @@ def generate_log_event() -> dict:
 
 
 def main():
-    rate = int(os.getenv("LOG_RATE", "1500"))           # logs per second – tune for load test
-    duration = int(os.getenv("DURATION_SECONDS", "0"))  # 0 = run forever
+    rate = int(os.getenv("LOG_RATE", "1500"))           
+    duration = int(os.getenv("DURATION_SECONDS", "0"))  
     burst_every = int(os.getenv("BURST_EVERY", "40"))
     burst_size = int(os.getenv("BURST_SIZE", "250"))
 
@@ -114,7 +98,7 @@ def main():
         print(json.dumps(event), flush=True)
         total_sent += 1
 
-        # Burst mode (realistic traffic spikes)
+
         if total_sent >= next_burst:
             print(f"💥 BURST! Sending {burst_size} extra logs...")
             for _ in range(burst_size):
@@ -123,7 +107,7 @@ def main():
                 total_sent += 1
             next_burst = total_sent + burst_every
 
-        # Precise rate control
+
         elapsed = time.time() - start_time
         target = int(elapsed * rate)
         if total_sent < target:
