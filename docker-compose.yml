@@ -1,4 +1,4 @@
-# services:
+services:
 #   app:
 #     image: nginx:alpine
 #     container_name: demo-app
@@ -18,6 +18,18 @@
 #       done
 #       '
 
+  generator:
+    image: python:3.12-slim
+    working_dir: /app
+    command: ["python", "gen.py"]
+    volumes:
+      - ./generator:/app
+
+    environment:
+      - LOG_RATE=1
+      - BURST_SIZE=400
+    restart: unless-stopped
+
   log-sidecar:
     build: .
     image: log-sidecar:latest
@@ -28,4 +40,4 @@
     environment:
       LOG_ENDPOINT: http://host.docker.internal:8080/api/v1/logs/batch
       AUTH_TOKEN: test-token
-      LOG_SERVICES: app,worker
+      LOG_SERVICES: generator
