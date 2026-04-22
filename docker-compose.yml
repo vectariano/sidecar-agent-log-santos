@@ -38,6 +38,12 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      LOG_ENDPOINT: http://host.docker.internal:8080/api/v1/logs/batch
-      AUTH_TOKEN: test-token
+      LOG_ENDPOINT: http://controller-ls:8080/api/v1/logs/batch
+      AUTH_TOKEN: sk_test_1234567890
       LOG_SERVICES: generator
+    networks:
+      - logsantos_log-santos-net
+
+networks:
+  logsantos_log-santos-net:
+    external: true
