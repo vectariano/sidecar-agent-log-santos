@@ -42,8 +42,8 @@ services:
       AUTH_TOKEN: sk_test_1234567890
       LOG_SERVICES: generator
     networks:
-      - logsantos_log-santos-net
+      - net-ls
 
 networks:
-  logsantos_log-santos-net:
+  net-ls:
     external: true
