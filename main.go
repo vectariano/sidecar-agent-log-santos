@@ -25,8 +25,8 @@ import (
 )
 
 const (
-	defaultBatchSize     = 5
-	defaultFlushInterval = 2 * time.Second
+	defaultBatchSize     = 1000
+	defaultFlushInterval = 5 * time.Second
 	defaultHTTPTimeout   = 10 * time.Second
 )
 

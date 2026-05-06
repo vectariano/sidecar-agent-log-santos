@@ -26,8 +26,10 @@ services:
       - ./generator:/app
 
     environment:
-      - LOG_RATE=1
-      - BURST_SIZE=400
+      - LOG_RATE=1000
+      - DURATION_SECONDS=3600
+      - BURST_EVERY=1000000
+      - BURST_SIZE=0
     restart: unless-stopped
 
   log-sidecar:
